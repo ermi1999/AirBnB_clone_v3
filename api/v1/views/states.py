@@ -12,7 +12,7 @@ def states_get():
     _all = []
     for value in storage.all(State).values():
         _all.append(value.to_dict())
-    return jsonify(_all)
+    return jsonify(_all), 200
 
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
