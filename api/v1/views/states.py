@@ -62,4 +62,3 @@ def states_put(state_id):
         return jsonify(_obj.to_dict()), 200
     else:
         abort(404)
-
