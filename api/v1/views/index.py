@@ -11,6 +11,7 @@ from models.amenity import Amenity
 from models.base_model import BaseModel
 from models import storage
 
+
 @app_views.route('/status')
 def status():
     """returns the status of the api"""
