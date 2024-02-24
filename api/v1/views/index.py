@@ -8,7 +8,6 @@ from models.place import Place
 from models.state import State
 from models.review import Review
 from models.amenity import Amenity
-from models.base_model import BaseModel
 from models import storage
 
 
