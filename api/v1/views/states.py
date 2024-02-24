@@ -20,7 +20,7 @@ def state_get(state_id):
     """gets a specific state based on the id
     that is given in the uri"""
     _obj = storage.get(State, state_id)
-    if state:
+    if _obj:
         return jsonify(_obj.to_dict()), 200
     else:
         abort(404)
