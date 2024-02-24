@@ -10,17 +10,14 @@ from api.v1.views import app_views
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def states_get(state_id=None):
     """gets all state objects"""
-    _objs = storage.all(State)
     if state_id:
-        _id = "State.{}".format(state_id)
-        _obj = _objs.get(_id)
+        _obj = storage.get(State, state_id)
         if _obj:
-
             return jsonify(_obj.to_dict())
         else:
             abort(404)
     _all = []
-    for value in _objs.values():
+    for value in storage.all(State).values():
         _all.append(value.to_dict())
     return jsonify(_all)
 
@@ -29,14 +26,11 @@ def states_get(state_id=None):
                  methods=['DELETE'], strict_slashes=False)
 def states_delete(state_id):
     """deletes the state object that matches the state_id"""
-    if state_id:
-        _objs = storage.all(State)
-        _id = "State.{}".format(state_id)
-        _obj = _obj.get(_id)
-        if _obj:
-            storage.delete(_obj)
-            storage.save()
-            return (jsonify({}))
+    state = storage.get(State, state_id)
+    if state:
+        storage.delete(state)
+        storage.save()
+        return (jsonify({})), 200
     abort(404)
 
 
@@ -44,9 +38,9 @@ def states_delete(state_id):
 def states_post():
     """adds a new data to the states object"""
     if not request.get_json():
-        abort(400, {"message": "Not a JSON"})
+        abort(400, "Not a JSON")
     if 'name' not in request.get_json():
-        abort(400, {"message": "Missing name"})
+        abort(400, "Missing name")
     new_obj = State(**request.get_json())
     storage.new(new_obj)
     storage.save()
@@ -58,11 +52,14 @@ def states_put(state_id):
     """updates the state object"""
     if not request.get_json():
         abort(400, "Not a json")
-    _id = "State.{}".format(state_id)
-    _obj = storage.all().get(_id)
-    not_allowed = ["id", "created_at", "updated_at"]
-    for key, value in request.get_json().items():
-        if key not in not_allowed:
-            setattr(_obj, key, value)
-    storage.save()
-    return jsonify(_obj.to_dict()), 200
+    _obj = storage.get(State, state_id)
+    if _obj:
+        not_allowed = ["id", "created_at", "updated_at"]
+        for key, value in request.get_json().items():
+            if key not in not_allowed:
+                setattr(_obj, key, value)
+        _obj.save()
+        return jsonify(_obj.to_dict()), 200
+    else:
+        abort(404)
+
