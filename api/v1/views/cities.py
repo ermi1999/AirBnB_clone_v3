@@ -6,7 +6,9 @@ from models.city import City
 from models.state import State
 from api.v1.views import app_views
 
-@app_views.route('/states/<state_id>/cities', methods=['GET'], strict_slashes=False)
+
+@app_views.route('/states/<state_id>/cities',
+                 methods=['GET'], strict_slashes=False)
 def cities_by_state(state_id):
     """returns all cities by state_id"""
     state = storage.get(State, state_id)
@@ -42,7 +44,8 @@ def delete_city(city_id):
         abort(404)
 
 
-@app_views.route('/states/<state_id>/cities', methods=['POST'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities',
+                 methods=['POST'], strict_slashes=False)
 def post_city(state_id):
     """creates a new city"""
     if not request.get_json():
@@ -58,3 +61,19 @@ def post_city(state_id):
     else:
         abort(404)
 
+
+@app_views.route('/cities/<city_id>', methods=['PUT'], strict_slashes=False)
+def put_city(city_id):
+    """updates a city object."""
+    if not request.get_json():
+        abort(400, "Not a JSON")
+    city = storage.get(City, city_id)
+    if city:
+        forbidden_keys = ["id", "state_id", "created_at", "updated_at"]
+        for key, value in request.get_json().items():
+            if key not in forbidden_keys:
+                setattr(city, key, value)
+        city.save()
+        return jsonify(city.to_dict()), 200
+    else:
+        abort(404)
