@@ -8,16 +8,17 @@ from api.v1.views import app_views
 
 @app_views.route('/amenities',
                  methods=['GET'], strict_slashes=False)
-def cities_by_state():
+def get_amenities():
     """returns all amenities"""
     amenities = storage.all(Amenity)
     result = []
-    for amenity in amenities:
+    for amenity in amenities.values():
         result.append(amenity.to_dict())
     return jsonify(result), 200
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>',
+                 methods=['GET'], strict_slashes=False)
 def get_amenity(amenity_id):
     """gets a amenity"""
     amenity = storage.get(Amenity, amenity_id)
@@ -27,7 +28,8 @@ def get_amenity(amenity_id):
         abort(404)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>',
+                 methods=['DELETE'], strict_slashes=False)
 def delete_amenity(amenity_id):
     """deletes a amenity object"""
     amenity = storage.get(Amenity, amenity_id)
@@ -41,7 +43,7 @@ def delete_amenity(amenity_id):
 
 @app_views.route('/amenities',
                  methods=['POST'], strict_slashes=False)
-def put_amenity():
+def post_amenity():
     """creates a new amenity object"""
     if not request.get_json():
         abort(400, "Not a JSON")
@@ -52,7 +54,8 @@ def put_amenity():
     return jsonify(new_amenity.to_dict()), 201
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>',
+                 methods=['PUT'], strict_slashes=False)
 def put_amenity(amenity_id):
     """updates a amenity object."""
     if not request.get_json():
