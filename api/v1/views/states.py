@@ -42,9 +42,9 @@ def states_delete(state_id):
 def states_post():
     """adds a new data to the states object"""
     if not request.get_json():
-        abort(400, "Not a JSON")
+        abort(400, {"message": "Not a JSON"})
     if 'name' not in request.get_json():
-        abort(400, "Missing name")
+        abort(400, {"message": "Missing name"})
     new_obj = State(**request.get_json())
     storage.save()
     return jsonify(new_obj.to_dict()), 201
@@ -54,7 +54,7 @@ def states_post():
 def states_put(state_id):
     """updates the state object"""
     if not request.get_json():
-        abort(400, "Not a JSON")
+        abort(400, {"message": "Not a JSON"})
     _obj = storage.get(State, state_id)
     if _obj:
         not_allowed = ["id", "created_at", "updated_at"]
