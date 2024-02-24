@@ -7,19 +7,23 @@ from api.v1.views import app_views
 
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
-@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
-def states_get(state_id=None):
+def states_get():
     """gets all state objects"""
-    if state_id:
-        _obj = storage.get(State, state_id)
-        if _obj:
-            return jsonify(_obj.to_dict())
-        else:
-            abort(404)
     _all = []
     for value in storage.all(State).values():
         _all.append(value.to_dict())
     return jsonify(_all)
+
+
+@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
+def state_get(state_id):
+    """gets a specific state based on the id
+    that is given in the uri"""
+    _obj = storage.get(State, state_id)
+    if state:
+        return jsonify(_obj.to_dict()), 200
+    else:
+        abort(404)
 
 
 @app_views.route('/states/<state_id>',
