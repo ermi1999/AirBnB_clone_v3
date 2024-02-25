@@ -81,7 +81,8 @@ def put_place(place_id):
         abort(400, "Not a JSON")
     place = storage.get(Place, place_id)
     if place:
-        forbidden_keys = ["id", "user_id", "city_id", "created_at", "updated_at"]
+        forbidden_keys = ["id", "user_id",
+                          "city_id", "created_at", "updated_at"]
         for key, value in request.get_json().items():
             if key not in forbidden_keys:
                 setattr(place, key, value)
