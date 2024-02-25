@@ -70,3 +70,10 @@ class Place(BaseModel, Base):
         def amenities(self):
             """getter attribute returns the list of Amenity instances"""
             return self.amenity_ids
+
+        @amenities.setter
+        def amenities(self, obj):
+            """a setter method for amenity_ids"""
+            from models.amenity import Amenity
+            if type(obj) is Amenity and obj.id not in self.amenity_ids:
+                self.amenity_ids.append(obj.id)
