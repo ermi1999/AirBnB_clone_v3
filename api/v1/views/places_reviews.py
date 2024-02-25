@@ -14,7 +14,7 @@ from api.v1.views import app_views
 def get_reviews(place_id):
     """returns all reviews"""
     place = storage.get(Place, place_id)
-    if city:
+    if place:
         result = []
         reviews = place.reviews
         for review in reviews:
@@ -28,7 +28,7 @@ def get_reviews(place_id):
                  methods=['GET'], strict_slashes=False)
 def get_review(review_id):
     """gets a review"""
-    review = storage.get(Review, place_id)
+    review = storage.get(Review, review_id)
     if review:
         return jsonify(review.to_dict()), 200
     else:
