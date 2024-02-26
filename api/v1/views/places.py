@@ -5,6 +5,8 @@ from models import storage
 from models.place import Place
 from models.city import City
 from models.user import User
+from models.state import State
+from models import storage_t
 from api.v1.views import app_views
 
 
@@ -90,3 +92,51 @@ def put_place(place_id):
         return jsonify(place.to_dict()), 200
     else:
         abort(404)
+
+
+@app_views.route('/places_search', methods=['POST'], strict_slashes=False)
+def search_places():
+    """searchs a place objects"""
+    request_json = request.get_json()
+    if not request_json:
+        abort(400, "Not a JSON")
+    result = []
+    places = storage.all(Place)
+    if len(request_json) == 0 or (
+            len(request_json.get('states')) == 0 and len(
+                request_json.get('cities')) == 0 and len(
+                    request_json.get('amenities')) == 0):
+        for place in places.values():
+            result.append(place.to_dict())
+        return jsonify(result), 200
+    temp = {}
+    if 'states' in request_json:
+        states = request_json.get('states')
+        for place in places.values():
+            if storage.get(State, storage.get(City, place.city_id).state_id).id in states:
+                temp[place.id] = place
+    
+    if 'cities' in request_json:
+        cities = request_json.get('cities')
+        for place in places.values():
+            if place.city_id in cities:
+                temp[place.id] = place
+
+    if 'amenities' in request_json:
+        amenities = request_json.get('amenities')
+        for key, value in temp.items():
+            for amenity in amenities:
+                if storage_t == 'db':
+                    _ids = []
+                    for _amenity in value.amenities:
+                        _ids.append(_amenity.id)
+                    if amenity not in _ids:
+                        del temp[key]
+                else:
+                    if amenity not in value.amenities:
+                        del temp[key]
+
+    for value in temp.values():
+        result.append(value.to_dict())
+    return jsonify(result), 200
+
