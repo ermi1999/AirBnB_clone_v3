@@ -90,7 +90,7 @@ class TestFileStorage(unittest.TestCase):
 class TestDBStorage(unittest.TestCase):
     """Test the DBStorage class"""
 
-    @unittest.skipIf(os.getenv(HBNB_TYPE_STORAGE) != 'db',
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
                      "not testing db storage")
     def test_get(self):
         """Test that get returns specific object, or none"""
@@ -114,4 +114,4 @@ class TestDBStorage(unittest.TestCase):
         new_user = User(email="bob@foobar.com", password="password")
         new_user.save()
         self.assertEqual(models.storage.count("State"), initial_count + 1)
-        self.assertEqual(models.storage.count(), initial_count + 2)
+        self.assertEqual(models.storage.count(), initial_count + 2) 
