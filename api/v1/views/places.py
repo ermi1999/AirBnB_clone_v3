@@ -128,19 +128,33 @@ def search_places():
                     temp[place.id] = place
 
     if 'amenities' in request_json:
-        amenities = request_json.get('amenities')
-        for key, value in temp.items():
-            for amenity in amenities:
-                if storage_t == 'db':
-                    _ids = []
-                    for _amenity in value.amenities:
-                        _ids.append(_amenity.id)
-                    if amenity not in _ids:
-                        del temp[key]
-                else:
-                    if amenity not in value.amenities:
-                        del temp[key]
-
+        amenity_ids = request_json.get('amenities')
+        if request_json.get('cities') or request_json.get('states'):
+            for key, value in temp.items():
+                for amenity_id in amenity_ids:
+                    if storage_t == 'db':
+                        ids = []
+                        for amenity in value.amenities:
+                            ids.append(amenity.id)
+                        if amenity_id not in ids:
+                            del temp[key]
+                    else:
+                        if amenity_id not in value.amenities:
+                            del temp[key]
+        else:
+            for value in places.values():
+                result.append(value.to_dict())
+                for amenity_id in amenity_ids:
+                    if storage_t == 'db':
+                        ids = []
+                        for amenity in value.amenities:
+                            ids.append(amenity.id)
+                        if amenity_id not in ids:
+                            result.pop()
+                    else:
+                        if amenity_id not in value.amenities:
+                            result.pop()
+            return jsonify(result)
     for value in temp.values():
         result.append(value.to_dict())
     return jsonify(result), 200
