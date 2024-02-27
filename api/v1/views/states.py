@@ -42,7 +42,7 @@ def states_delete(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def states_post():
     """adds a new data to the states object"""
-    if not request.get_json() or request.headers.get('Content-Type') != 'application/json':
+    if not request.get_json():
         abort(400, "Not a JSON")
     if 'name' not in request.get_json():
         abort(400, "Missing name")
