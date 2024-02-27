@@ -53,7 +53,7 @@ def delete_review(review_id):
 def post_review(place_id):
     """creates a new review object"""
     request_json = request.get_json()
-    if not request_json:
+    if not request.is_json:
         abort(400, "Not a JSON")
     if "user_id" not in request_json:
         abort(400, "Missing user_id")
@@ -69,7 +69,7 @@ def post_review(place_id):
                  methods=['PUT'], strict_slashes=False)
 def put_review(review_id):
     """updates a review object."""
-    if not request.get_json():
+    if not request.is_json:
         abort(400, "Not a JSON")
     review = storage.get(Review, review_id)
     if review:

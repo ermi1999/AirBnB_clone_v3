@@ -57,7 +57,7 @@ def delete_place(place_id):
 def post_place(city_id):
     """creates a new place object"""
     request_json = request.get_json()
-    if not request_json:
+    if not request.is_json:
         abort(400, "Not a JSON")
     if "user_id" not in request_json:
         abort(400, "Missing user_id")
@@ -79,7 +79,7 @@ def post_place(city_id):
                  methods=['PUT'], strict_slashes=False)
 def put_place(place_id):
     """updates a place object."""
-    if not request.get_json():
+    if not request.is_json:
         abort(400, "Not a JSON")
     place = storage.get(Place, place_id)
     if place:
@@ -98,7 +98,7 @@ def put_place(place_id):
 def search_places():
     """searchs a place objects"""
     request_json = request.get_json()
-    if not request_json:
+    if not request.is_json:
         abort(400, "Not a JSON")
     result = []
     places = storage.all(Place)

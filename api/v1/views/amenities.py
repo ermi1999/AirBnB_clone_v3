@@ -45,7 +45,7 @@ def delete_amenity(amenity_id):
                  methods=['POST'], strict_slashes=False)
 def post_amenity():
     """creates a new amenity object"""
-    if not request.get_json():
+    if not request.is_json:
         abort(400, "Not a JSON")
     if "name" not in request.get_json():
         abort(400, "Missing name")
@@ -58,7 +58,7 @@ def post_amenity():
                  methods=['PUT'], strict_slashes=False)
 def put_amenity(amenity_id):
     """updates a amenity object."""
-    if not request.get_json():
+    if not request.is_json:
         abort(400, "Not a JSON")
     amenity = storage.get(Amenity, amenity_id)
     if amenity:
