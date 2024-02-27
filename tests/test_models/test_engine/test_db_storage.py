@@ -87,6 +87,7 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
+
 class TestDBStorage(unittest.TestCase):
     """Test the DBStorage class"""
 
@@ -114,4 +115,4 @@ class TestDBStorage(unittest.TestCase):
         new_user = User(email="bob@foobar.com", password="password")
         new_user.save()
         self.assertEqual(models.storage.count("State"), initial_count + 1)
-        self.assertEqual(models.storage.count(), initial_count + 2) 
+        self.assertEqual(models.storage.count(), initial_count + 2)
