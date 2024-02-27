@@ -42,7 +42,7 @@ def states_delete(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def states_post():
     """adds a new data to the states object"""
-    if not request.get_json():
+    if not request.is_json:
         abort(400, "Not a JSON")
     if 'name' not in request.get_json():
         abort(400, "Missing name")
@@ -54,7 +54,7 @@ def states_post():
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def states_put(state_id):
     """updates the state object"""
-    if not request.get_json():
+    if not request.is_json:
         abort(400, "Not a JSON")
     _obj = storage.get(State, state_id)
     if _obj:
